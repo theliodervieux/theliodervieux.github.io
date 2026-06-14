@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thélio Dervieux — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       DESIGN TOKENS
+    ============================================================ */
+    :root {
+      --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      --radius: 14px;
+    }
+
+    [data-theme="dark"] {
+      --bg:            #080D1A;
+      --bg-alt:        #0D1527;
+      --surface:       #131E33;
+      --surface-hover: #192742;
+      --border:        #1E2E4A;
+      --accent:        #4F9CF9;
+      --accent-dim:    rgba(79,156,249,0.12);
+      --accent2:       #5EEAD4;
+      --accent2-dim:   rgba(94,234,212,0.08);
+      --text-1:        #E2E8F0;
+      --text-2:        #8B9CC8;
+      --text-3:        #3D4F6A;
+      --shadow:        0 8px 32px rgba(0,0,0,0.5);
+      --nav-blur:      rgba(8,13,26,0.88);
+      --dot-color:     rgba(79,156,249,0.55);
+      --line-color:    rgba(79,156,249,0.06);
+    }
+
+    [data-theme="light"] {
+      --bg:            #EEF3FF;
+      --bg-alt:        #E3ECFF;
+      --surface:       #FFFFFF;
+      --surface-hover: #F5F8FF;
+      --border:        #C8D6F5;
+      --accent:        #1D6FE8;
+      --accent-dim:    rgba(29,111,232,0.09);
+      --accent2:       #0891B2;
+      --accent2-dim:   rgba(8,145,178,0.07);
+      --text-1:        #0F172A;
+      --text-2:        #3D5070;
+      --text-3:        #94A3B8;
+      --shadow:        0 8px 32px rgba(79,100,156,0.13);
+      --nav-blur:      rgba(238,243,255,0.9);
+      --dot-color:     rgba(29,111,232,0.35);
+      --line-color:    rgba(29,111,232,0.05);
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      line-height: 1.6;
+      transition: background var(--transition), color var(--transition);
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    /* ============================================================
+       NAV
+    ============================================================ */
+    nav {
+      position: fixed; inset: 0 0 auto 0; z-index: 200;
+      background: var(--nav-blur);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .nav-inner {
+      max-width: 1140px; margin: 0 auto; padding: 0 28px;
+      height: 68px; display: flex; align-items: center;
+      justify-content: space-between; gap: 20px;
+    }
+    .nav-logo { display: flex; align-items: center; flex-shrink: 0; cursor: pointer; }
+    .nav-logo img { height: 36px; width: auto; object-fit: contain; transition: filter var(--transition); }
+    [data-theme="light"] .nav-logo img { filter: brightness(0.75) saturate(1.2); }
+    .nav-tabs { display: flex; gap: 2px; flex: 1; justify-content: center; }
+    .nav-tab {
+      font-size: 0.82rem; font-weight: 500; color: var(--text-2);
+      padding: 7px 14px; border-radius: 9px; transition: all 0.2s; white-space: nowrap;
+    }
+    .nav-tab:hover { color: var(--text-1); background: var(--accent-dim); }
+    .nav-tab.active { color: var(--accent); background: var(--accent-dim); }
+    .nav-back {
+      display: none; align-items: center; gap: 8px;
+      font-size: 0.82rem; font-weight: 500; color: var(--text-2);
+      padding: 7px 14px; border-radius: 9px; transition: all 0.2s; cursor: pointer;
+    }
+    .nav-back:hover { color: var(--accent); background: var(--accent-dim); }
+    .nav-back svg { width: 15px; height: 15px; }
+    .nav-controls { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+
+    /* ============================================================
+       TOGGLES
+    ============================================================ */
+    .t-pill {
+      position: relative; display: flex; align-items: center;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 50px; padding: 3px; gap: 1px;
+      cursor: pointer; transition: border-color 0.2s; user-select: none;
+    }
+    .t-pill:hover { border-color: var(--accent); }
+    .t-opt {
+      position: relative; z-index: 1;
+      padding: 5px 12px; border-radius: 50px;
+      font-size: 0.73rem; font-weight: 700;
+      font-family: 'Space Grotesk', sans-serif; letter-spacing: 0.04em;
+      color: var(--text-2); transition: color 0.2s; line-height: 1;
+    }
+    .t-opt.active { color: #fff; }
+    .t-thumb {
+      position: absolute; top: 3px; bottom: 3px; border-radius: 50px;
+      background: var(--accent);
+      transition: left 0.28s cubic-bezier(0.4,0,0.2,1), width 0.28s;
+      z-index: 0; pointer-events: none;
+    }
+
+    /* ============================================================
+       SECTION BASE
+    ============================================================ */
+    .section { padding: 110px 28px; transition: background var(--transition); }
+    .section.alt { background: var(--bg-alt); }
+    .section-inner { max-width: 1140px; margin: 0 auto; }
+    .s-eyebrow {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+      color: var(--accent2); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px;
+    }
+    .s-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem); font-weight: 700;
+      letter-spacing: -0.025em; color: var(--text-1); margin-bottom: 52px; line-height: 1.1;
+    }
+    .s-title em { color: var(--accent); font-style: normal; }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    #accueil { position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; }
+    #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .hero-inner {
+      position: relative; z-index: 1; max-width: 1140px; margin: 0 auto;
+      padding: 100px 28px 80px; display: flex; align-items: center; gap: 72px;
+    }
+    .hero-photo-wrap { flex-shrink: 0; animation: fadeUp 0.7s 0.05s ease both; }
+    .photo-ring { position: relative; width: 210px; height: 210px; }
+    .photo-ring::before {
+      content: ''; position: absolute; inset: -4px; border-radius: 50%;
+      background: conic-gradient(var(--accent), var(--accent2), var(--accent));
+      animation: spin 8s linear infinite; opacity: 0.6;
+    }
+    .photo-ring::after { content: ''; position: absolute; inset: -1px; border-radius: 50%; background: var(--bg); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hero-photo {
+      position: relative; z-index: 1; width: 210px; height: 210px;
+      border-radius: 50%; object-fit: cover; object-position: center 15%;
+      border: 3px solid var(--bg); box-shadow: var(--shadow);
+    }
+    .hero-text { flex: 1; }
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+      color: var(--accent2); letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 14px; animation: fadeUp 0.6s 0.12s ease both;
+    }
+    .hero-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.4rem, 5.5vw, 4.2rem); font-weight: 700;
+      line-height: 1.0; letter-spacing: -0.035em; color: var(--text-1);
+      margin-bottom: 14px; animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .hero-name em { color: var(--accent); font-style: normal; }
+    .hero-role {
+      font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem;
+      font-weight: 500; color: var(--text-2); margin-bottom: 6px;
+      animation: fadeUp 0.6s 0.27s ease both;
+    }
+    .hero-loc {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-3);
+      margin-bottom: 28px; display: flex; align-items: center; gap: 7px;
+      animation: fadeUp 0.6s 0.32s ease both;
+    }
+    .hero-loc svg { flex-shrink: 0; }
+    .hero-desc {
+      font-size: 0.97rem; color: var(--text-2); max-width: 500px;
+      line-height: 1.8; animation: fadeUp 0.6s 0.38s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================================
+       PROJECTS — HOME SECTION (6 featured)
+    ============================================================ */
+    .projects-home-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-bottom: 40px;
+    }
+    .see-all-wrap { display: flex; justify-content: center; }
+    .btn-see-all {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 12px 30px; border-radius: 10px;
+      border: 1px solid var(--accent); color: var(--accent);
+      font-size: 0.88rem; font-weight: 600;
+      background: var(--accent-dim);
+      transition: all 0.22s; cursor: pointer;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .btn-see-all:hover { background: var(--accent); color: #fff; }
+    .btn-see-all svg { width: 16px; height: 16px; transition: transform 0.2s; }
+    .btn-see-all:hover svg { transform: translateX(3px); }
+
+    /* Project card (shared) */
+    .p-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: transform 0.22s ease, border-color 0.22s, box-shadow 0.22s;
+      cursor: pointer;
+    }
+    .p-card:hover {
+      transform: translateY(-5px); border-color: var(--accent);
+      box-shadow: 0 16px 48px rgba(79,156,249,0.13);
+    }
+    .p-card.hidden { display: none; }
+    .p-thumb {
+      width: 100%; height: 185px; background: var(--bg); overflow: hidden;
+    }
+    .p-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .p-card:hover .p-thumb img { transform: scale(1.04); }
+    .p-thumb-placeholder {
+      width: 100%; height: 100%; display: flex; align-items: center;
+      justify-content: center; flex-direction: column; gap: 8px;
+      color: var(--text-3); font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+    }
+    .p-thumb-placeholder svg { width: 28px; height: 28px; opacity: 0.3; }
+    .p-body { padding: 18px 20px 20px; display: flex; flex-direction: column; flex: 1; gap: 9px; }
+    .p-date { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--text-3); }
+    .p-title { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text-1); line-height: 1.25; }
+    .p-desc { font-size: 0.83rem; color: var(--text-2); line-height: 1.65; flex: 1;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .p-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+    .p-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.66rem;
+      padding: 3px 10px; border-radius: 50px;
+      background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(79,156,249,0.18);
+    }
+
+    /* ============================================================
+       ALL PROJECTS PAGE (hidden view)
+    ============================================================ */
+    #all-projects-page {
+      display: none; min-height: 100vh;
+      padding: 100px 28px 80px;
+      transition: background var(--transition);
+    }
+    .all-proj-inner { max-width: 1140px; margin: 0 auto; }
+    .all-proj-header { margin-bottom: 40px; }
+    .all-proj-header .s-title { margin-bottom: 28px; }
+
+    /* Filter bar */
+    .filter-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 36px; }
+    .search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 300px; }
+    .search-wrap svg {
+      position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+      width: 15px; height: 15px; color: var(--text-3); pointer-events: none;
+    }
+    .search-wrap input {
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 14px 10px 38px;
+      font-family: 'Inter', sans-serif; font-size: 0.83rem; color: var(--text-1);
+      outline: none; transition: all 0.2s;
+    }
+    .search-wrap input::placeholder { color: var(--text-3); }
+    .search-wrap input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+    .tag-filters { display: flex; gap: 7px; flex-wrap: wrap; }
+    .f-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+      padding: 6px 14px; border-radius: 50px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text-2); cursor: pointer; transition: all 0.18s;
+    }
+    .f-tag:hover, .f-tag.on { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+    .proj-count { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-3); margin-bottom: 22px; }
+    .all-projects-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
+    }
+    .no-results {
+      display: none; grid-column: 1/-1; text-align: center; padding: 60px 20px;
+      color: var(--text-3); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+    }
+
+    /* ============================================================
+       PROJECT DETAIL PAGE (hidden view)
+    ============================================================ */
+    #project-detail-page { display: none; min-height: 100vh; }
+
+    .detail-hero {
+      width: 100%; height: 420px; overflow: hidden;
+      position: relative; background: var(--bg-alt);
+      margin-top: 68px;
+    }
+    .detail-hero img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: brightness(0.75);
+    }
+    .detail-hero-placeholder {
+      width: 100%; height: 100%; display: flex; align-items: center;
+      justify-content: center; background: var(--bg-alt);
+    }
+    .detail-hero-placeholder svg { width: 60px; height: 60px; opacity: 0.12; color: var(--accent); }
+
+    .detail-body {
+      max-width: 1140px; margin: 0 auto; padding: 52px 28px 100px;
+      display: grid; grid-template-columns: 1fr 340px; gap: 52px; align-items: start;
+    }
+
+    .detail-main {}
+    .detail-date {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+      color: var(--text-3); margin-bottom: 12px;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .detail-date svg { width: 13px; height: 13px; }
+    .detail-title {
+      font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.7rem, 3vw, 2.4rem);
+      font-weight: 700; letter-spacing: -0.025em; color: var(--text-1);
+      line-height: 1.15; margin-bottom: 16px;
+    }
+    .detail-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 36px; }
+    .detail-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+      padding: 5px 14px; border-radius: 50px;
+      background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(79,156,249,0.2);
+    }
+
+    /* Description (basic markdown rendering) */
+    .detail-desc { font-size: 0.95rem; color: var(--text-2); line-height: 1.85; }
+    .detail-desc h2 {
+      font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600;
+      color: var(--text-1); margin: 32px 0 12px; letter-spacing: -0.01em;
+    }
+    .detail-desc h3 {
+      font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600;
+      color: var(--text-1); margin: 24px 0 8px;
+    }
+    .detail-desc p { margin-bottom: 14px; }
+    .detail-desc strong { color: var(--text-1); font-weight: 600; }
+    .detail-desc ul { padding-left: 20px; margin-bottom: 14px; }
+    .detail-desc li { margin-bottom: 6px; }
+
+    /* Extra images */
+    .detail-images { margin-top: 40px; display: flex; flex-direction: column; gap: 16px; }
+    .detail-img-item {
+      border-radius: 10px; overflow: hidden; border: 1px solid var(--border);
+    }
+    .detail-img-item img { width: 100%; height: auto; }
+    .detail-img-caption {
+      padding: 10px 14px; font-size: 0.78rem; color: var(--text-3);
+      font-family: 'JetBrains Mono', monospace; background: var(--surface);
+    }
+
+    /* Sidebar */
+    .detail-sidebar { position: sticky; top: 90px; display: flex; flex-direction: column; gap: 18px; }
+    .sidebar-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+    }
+    .sidebar-box-title {
+      display: flex; align-items: center; gap: 9px; margin-bottom: 18px;
+      font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.95rem; color: var(--text-1);
+    }
+    .sidebar-box-title svg { width: 16px; height: 16px; color: var(--accent); }
+    .sidebar-box-sub { font-size: 0.78rem; color: var(--text-3); margin-bottom: 16px; }
+
+    .file-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0; border-bottom: 1px solid var(--border); gap: 10px;
+    }
+    .file-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .file-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .file-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .file-name { font-size: 0.83rem; color: var(--text-1); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .file-badge {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; font-weight: 700;
+      padding: 2px 7px; border-radius: 4px; letter-spacing: 0.04em; flex-shrink: 0;
+    }
+    .badge-pdf  { background: rgba(239,68,68,0.12); color: #F87171; border: 1px solid rgba(239,68,68,0.2); }
+    .badge-py   { background: rgba(79,156,249,0.12); color: #4F9CF9; border: 1px solid rgba(79,156,249,0.2); }
+    .badge-pbi  { background: rgba(249,194,79,0.12); color: #F9C24F; border: 1px solid rgba(249,194,79,0.2); }
+    .badge-xlsx { background: rgba(52,211,153,0.12); color: #34D399; border: 1px solid rgba(52,211,153,0.2); }
+    .badge-word { background: rgba(99,102,241,0.12); color: #818CF8; border: 1px solid rgba(99,102,241,0.2); }
+    .badge-zip  { background: rgba(249,115,22,0.12); color: #FB923C; border: 1px solid rgba(249,115,22,0.2); }
+    .badge-link { background: rgba(94,234,212,0.12); color: #5EEAD4; border: 1px solid rgba(94,234,212,0.2); }
+    .badge-default { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(79,156,249,0.2); }
+
+    .file-dl {
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 7px;
+      border: 1px solid var(--border); color: var(--text-2);
+      transition: all 0.18s; text-decoration: none;
+    }
+    .file-dl:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+    .file-dl svg { width: 14px; height: 14px; }
+
+    .sidebar-contact-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 11px; border-radius: 9px;
+      background: var(--accent); color: #fff; font-size: 0.85rem; font-weight: 600;
+      text-decoration: none; transition: opacity 0.2s; cursor: pointer; border: none;
+      font-family: 'Inter', sans-serif;
+    }
+    .sidebar-contact-btn:hover { opacity: 0.85; }
+
+    /* ============================================================
+       À PROPOS
+    ============================================================ */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+    .about-desc { font-size: 0.95rem; color: var(--text-2); line-height: 1.85; }
+    .about-desc p + p { margin-top: 18px; }
+    .about-placeholder {
+      font-style: italic; color: var(--text-3); border: 1px dashed var(--border);
+      border-radius: 9px; padding: 16px 18px; font-size: 0.82rem; margin-top: 18px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .timeline-head {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+      color: var(--accent2); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 28px;
+    }
+    .timeline { position: relative; padding-left: 26px; }
+    .timeline::before {
+      content: ''; position: absolute; left: 0; top: 8px; bottom: 8px;
+      width: 2px; background: linear-gradient(to bottom, var(--accent), var(--accent2)); border-radius: 2px;
+    }
+    .tl-item { position: relative; margin-bottom: 34px; }
+    .tl-item:last-child { margin-bottom: 0; }
+    .tl-item::before {
+      content: ''; position: absolute; left: -30px; top: 7px;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent); border: 2px solid var(--bg-alt);
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+    .tl-year { font-family: 'JetBrains Mono', monospace; font-size: 0.69rem; color: var(--accent2); letter-spacing: 0.06em; margin-bottom: 4px; }
+    .tl-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text-1); margin-bottom: 3px; }
+    .tl-sub { font-size: 0.81rem; color: var(--text-2); }
+
+    /* ============================================================
+       BILAN
+    ============================================================ */
+    .bilan-placeholder {
+      background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius);
+      padding: 56px; text-align: center; color: var(--text-3);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; line-height: 2;
+    }
+    .bilan-text {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 44px 52px; font-size: 0.97rem; color: var(--text-2); line-height: 1.95;
+    }
+    .bilan-text p + p { margin-top: 20px; }
+    @media (max-width: 640px) { .bilan-text { padding: 28px 24px; } }
+
+    /* ============================================================
+       CONTACT
+    ============================================================ */
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-bottom: 24px; }
+    .c-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 28px 26px; display: flex; flex-direction: column; gap: 9px; transition: all 0.22s;
+    }
+    .c-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow); }
+    .c-icon { font-size: 1.75rem; margin-bottom: 2px; }
+    .c-label { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--accent2); letter-spacing: 0.1em; text-transform: uppercase; }
+    .c-value { font-size: 0.88rem; font-weight: 500; color: var(--text-1); word-break: break-all; }
+    .cv-row {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 28px 30px; display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 6px;
+    }
+    .cv-info h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text-1); margin-bottom: 5px; }
+    .cv-info p { font-size: 0.83rem; color: var(--text-2); }
+    .cv-btn-na {
+      flex-shrink: 0; display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px; border-radius: 9px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text-3); font-size: 0.82rem; font-weight: 500;
+      cursor: not-allowed; white-space: nowrap;
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      border-top: 1px solid var(--border); padding: 28px;
+      text-align: center; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem; color: var(--text-3); transition: border-color var(--transition);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 900px) {
+      .projects-home-grid { grid-template-columns: repeat(2, 1fr); }
+      .all-projects-grid  { grid-template-columns: repeat(2, 1fr); }
+      .detail-body        { grid-template-columns: 1fr; }
+      .detail-sidebar     { position: static; }
+      .detail-hero        { height: 260px; }
+    }
+    @media (max-width: 640px) {
+      .hero-inner { flex-direction: column; text-align: center; gap: 36px; padding: 100px 20px 60px; }
+      .hero-loc   { justify-content: center; }
+      .hero-desc  { max-width: 100%; }
+      .nav-tabs   { display: none; }
+      .section    { padding: 72px 20px; }
+      .projects-home-grid { grid-template-columns: 1fr; }
+      .all-projects-grid  { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .cv-row     { flex-direction: column; align-items: flex-start; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .photo-ring::before { animation: none; }
+      * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="main-nav">
+    <div class="nav-inner">
+      <div class="nav-logo" onclick="goHome()">
+        <img src="assets/logoPortfolio.png" alt="TD Logo">
+      </div>
+
+      <!-- Home tabs (shown on main view) -->
+      <div class="nav-tabs" id="nav-tabs">
+        <button class="nav-tab active" data-section="accueil"  onclick="navTo('accueil')" ><span data-fr="Accueil"   data-en="Home"       >Accueil</span></button>
+        <button class="nav-tab"        data-section="projets"  onclick="navTo('projets')" ><span data-fr="Projets"   data-en="Projects"   >Projets</span></button>
+        <button class="nav-tab"        data-section="apropos"  onclick="navTo('apropos')" ><span data-fr="À propos"  data-en="About"      >À propos</span></button>
+        <button class="nav-tab"        data-section="bilan"    onclick="navTo('bilan')"   ><span data-fr="Bilan"     data-en="Year Review">Bilan</span></button>
+        <button class="nav-tab"        data-section="contact"  onclick="navTo('contact')" ><span data-fr="Contact"   data-en="Contact"    >Contact</span></button>
+      </div>
+
+      <!-- Back button (shown on sub-views) -->
+      <button class="nav-back" id="nav-back" onclick="goHome()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        <span data-fr="Retour" data-en="Back">Retour</span>
+      </button>
+
+      <div class="nav-controls">
+        <div class="t-pill" onclick="toggleLang()">
+          <div class="t-thumb" id="lang-thumb"></div>
+          <span class="t-opt active" id="opt-fr">FR</span>
+          <span class="t-opt"        id="opt-en">EN</span>
+        </div>
+        <div class="t-pill" onclick="toggleTheme()">
+          <div class="t-thumb" id="theme-thumb"></div>
+          <span class="t-opt active" id="opt-dark">🌙</span>
+          <span class="t-opt"        id="opt-light">☀️</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       MAIN HOME CONTENT
+  ============================================================ -->
+  <div id="main-content">
+
+    <!-- ACCUEIL -->
+    <section id="accueil">
+      <canvas id="hero-canvas"></canvas>
+      <div class="hero-inner">
+        <div class="hero-photo-wrap">
+          <div class="photo-ring">
+            <img class="hero-photo" src="assets/PhotoProfil.JPG" alt="Thélio Dervieux" onerror="this.style.display='none'">
+          </div>
+        </div>
+        <div class="hero-text">
+          <div class="hero-eyebrow" data-fr="// étudiant · science des données" data-en="// student · data science">// étudiant · science des données</div>
+          <h1 class="hero-name">Thélio<br><em>Dervieux</em></h1>
+          <div class="hero-role" data-fr="BUT Science des Données — 1ère année" data-en="Bachelor of Technology in Data Science — 1st year">BUT Science des Données — 1ère année</div>
+          <div class="hero-loc">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span data-fr="Niort / Bordeaux, France" data-en="Niort / Bordeaux, France">Niort / Bordeaux, France</span>
+            <span style="color:var(--border)">·</span>
+            <span data-fr="18 ans" data-en="18 years old">18 ans</span>
+          </div>
+          <p class="hero-desc" data-fr="Étudiant de première année de BUT Science des Données à Niort, je suis passionné par les statistiques et la manipulation de données dans le but de fournir une analyse rigoureuse des chiffres." data-en="First-year student in a Bachelor of Technology in Data Science in Niort, I am passionate about statistics and data manipulation with the goal of providing rigorous numerical analysis.">
+            Étudiant de première année de BUT Science des Données à Niort, je suis passionné par les statistiques et la manipulation de données dans le but de fournir une analyse rigoureuse des chiffres.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJETS (home — 6 featured) -->
+    <section id="projets" class="section alt">
+      <div class="section-inner">
+        <div class="s-eyebrow" data-fr="// mes réalisations" data-en="// my work">// mes réalisations</div>
+        <h2 class="s-title" data-fr="Mes <em>Projets</em>" data-en="My <em>Projects</em>">Mes <em>Projets</em></h2>
+        <div class="projects-home-grid" id="projects-home-grid"></div>
+        <div class="see-all-wrap">
+          <button class="btn-see-all" onclick="showAllProjects()">
+            <span data-fr="Voir tous les projets" data-en="View all projects">Voir tous les projets</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- À PROPOS -->
+    <section id="apropos" class="section">
+      <div class="section-inner">
+        <div class="s-eyebrow" data-fr="// qui suis-je ?" data-en="// who am I?">// qui suis-je ?</div>
+        <h2 class="s-title" data-fr="À <em>propos</em> de moi" data-en="<em>About</em> me">À <em>propos</em> de moi</h2>
+        <div class="about-grid">
+          <div>
+            <div class="about-desc">
+              <p data-fr="Passionné par les mathématiques et les sciences depuis toujours, j'ai naturellement orienté mon parcours vers l'analyse de données. Ce qui me fascine dans la data science, c'est cette capacité à transformer des chiffres bruts en insights pertinents — à faire parler les données là où d'autres ne voient que du bruit." data-en="Passionate about mathematics and sciences from a young age, I naturally oriented my path towards data analysis. What fascinates me in data science is this ability to transform raw numbers into relevant insights — to make data speak where others see only noise.">Passionné par les mathématiques et les sciences depuis toujours, j'ai naturellement orienté mon parcours vers l'analyse de données. Ce qui me fascine dans la data science, c'est cette capacité à transformer des chiffres bruts en insights pertinents — à faire parler les données là où d'autres ne voient que du bruit.</p>
+              <p data-fr="En dehors des études, le sport occupe une place centrale dans ma vie — aussi bien en le pratiquant qu'en suivant les compétitions avec passion. Cette discipline sportive nourrit ma rigueur et ma persévérance dans le travail." data-en="Outside of studies, sport occupies a central place in my life — both in practicing it and following competitions with passion. This athletic discipline fuels my rigor and perseverance at work.">En dehors des études, le sport occupe une place centrale dans ma vie — aussi bien en le pratiquant qu'en suivant les compétitions avec passion. Cette discipline sportive nourrit ma rigueur et ma persévérance dans le travail.</p>
+            </div>
+            <div class="about-placeholder" data-fr="// Description personnelle approfondie à venir..." data-en="// Detailed personal description coming soon...">// Description personnelle approfondie à venir...</div>
+          </div>
+          <div>
+            <div class="timeline-head" data-fr="// parcours scolaire" data-en="// academic path">// parcours scolaire</div>
+            <div class="timeline">
+              <div class="tl-item">
+                <div class="tl-year" data-fr="2025 → Aujourd'hui" data-en="2025 → Present">2025 → Aujourd'hui</div>
+                <div class="tl-title" data-fr="BUT Sciences des Données — 1ère année" data-en="Bachelor of Technology in Data Science — 1st year">BUT Sciences des Données — 1ère année</div>
+                <div class="tl-sub"   data-fr="Université de Poitiers · IUT de Niort" data-en="University of Poitiers · IUT of Niort">Université de Poitiers · IUT de Niort</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-year">2024 — 2025</div>
+                <div class="tl-title" data-fr="Licence de Mathématiques (L1)" data-en="Bachelor's in Mathematics (1st year)">Licence de Mathématiques (L1)</div>
+                <div class="tl-sub"   data-fr="Université de Bordeaux" data-en="University of Bordeaux">Université de Bordeaux</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-year">2024</div>
+                <div class="tl-title" data-fr="Baccalauréat Général" data-en="French Baccalauréat">Baccalauréat Général</div>
+                <div class="tl-sub"   data-fr="Spécialités : Mathématiques & HGGSP" data-en="Specialties: Mathematics & HGGSP">Spécialités : Mathématiques & HGGSP</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BILAN -->
+    <section id="bilan" class="section alt">
+      <div class="section-inner">
+        <div class="s-eyebrow" data-fr="// rétrospective" data-en="// retrospective">// rétrospective</div>
+        <h2 class="s-title" data-fr="Bilan <em>personnel</em> de l'année" data-en="Personal <em>year</em> review">Bilan <em>personnel</em> de l'année</h2>
+        <div class="bilan-text" id="bilan-text">
+          <p data-fr="Cette première année de BUT Science des Données a été une expérience très enrichissante, aussi bien sur le plan académique que personnel. En intégrant cette formation, j'ai découvert un domaine passionnant qui combine les mathématiques, l'informatique et l'analyse de données, tout en développant une meilleure compréhension des enjeux liés à l'exploitation des données dans le monde actuel." data-en="This first year of the Bachelor of Technology in Data Science has been a very enriching experience, both academically and personally. By joining this programme, I discovered a fascinating field that combines mathematics, computer science and data analysis, while developing a better understanding of the challenges surrounding data exploitation in today's world.">Cette première année de BUT Science des Données a été une expérience très enrichissante, aussi bien sur le plan académique que personnel. En intégrant cette formation, j'ai découvert un domaine passionnant qui combine les mathématiques, l'informatique et l'analyse de données, tout en développant une meilleure compréhension des enjeux liés à l'exploitation des données dans le monde actuel.</p>
+          <p data-fr="Au cours de cette année, j'ai acquis de nombreuses compétences techniques, notamment en programmation, en statistiques, en gestion de bases de données et en visualisation de données. J'ai également appris à utiliser différents outils et méthodes permettant d'analyser et d'interpréter des données de manière rigoureuse. Les projets réalisés m'ont permis de mettre en pratique les connaissances théoriques acquises en cours et de développer mon autonomie." data-en="Throughout this year, I acquired many technical skills, notably in programming, statistics, database management and data visualisation. I also learned to use various tools and methods to analyse and interpret data rigorously. The projects I completed allowed me to put classroom theory into practice and develop my independence.">Au cours de cette année, j'ai acquis de nombreuses compétences techniques, notamment en programmation, en statistiques, en gestion de bases de données et en visualisation de données. J'ai également appris à utiliser différents outils et méthodes permettant d'analyser et d'interpréter des données de manière rigoureuse. Les projets réalisés m'ont permis de mettre en pratique les connaissances théoriques acquises en cours et de développer mon autonomie.</p>
+          <p data-fr="Cette année a également été l'occasion de renforcer mes compétences organisationnelles et mon travail en équipe. Les travaux de groupe et les projets collaboratifs m'ont appris à communiquer efficacement, à partager des idées et à m'adapter à différentes méthodes de travail. Ces expériences ont contribué à renforcer ma confiance en moi et ma capacité à relever de nouveaux défis." data-en="This year was also an opportunity to strengthen my organisational skills and teamwork. Group assignments and collaborative projects taught me to communicate effectively, share ideas and adapt to different working methods. These experiences helped build my self-confidence and my ability to take on new challenges.">Cette année a également été l'occasion de renforcer mes compétences organisationnelles et mon travail en équipe. Les travaux de groupe et les projets collaboratifs m'ont appris à communiquer efficacement, à partager des idées et à m'adapter à différentes méthodes de travail. Ces expériences ont contribué à renforcer ma confiance en moi et ma capacité à relever de nouveaux défis.</p>
+          <p data-fr="Je suis particulièrement satisfait du chemin parcouru depuis le début de l'année. Malgré les exigences de la formation et les difficultés rencontrées dans certaines matières, j'ai su rester motivé et persévérant. Ces efforts m'ont permis de progresser régulièrement et de mieux définir mon projet professionnel." data-en="I am particularly proud of the ground covered since the start of the year. Despite the demands of the programme and the difficulties encountered in certain subjects, I managed to stay motivated and persistent. These efforts allowed me to improve steadily and to better define my professional goals.">Je suis particulièrement satisfait du chemin parcouru depuis le début de l'année. Malgré les exigences de la formation et les difficultés rencontrées dans certaines matières, j'ai su rester motivé et persévérant. Ces efforts m'ont permis de progresser régulièrement et de mieux définir mon projet professionnel.</p>
+          <p data-fr="Je termine donc cette première année avec beaucoup de satisfaction et d'enthousiasme pour la suite de mon parcours. Les connaissances acquises et les expériences vécues ont confirmé mon intérêt pour la science des données et me donnent envie d'approfondir davantage mes compétences lors des prochaines années du BUT." data-en="I therefore conclude this first year with great satisfaction and enthusiasm for the road ahead. The knowledge gained and the experiences lived have confirmed my interest in data science and motivate me to deepen my skills further in the coming years of the programme.">Je termine donc cette première année avec beaucoup de satisfaction et d'enthousiasme pour la suite de mon parcours. Les connaissances acquises et les expériences vécues ont confirmé mon intérêt pour la science des données et me donnent envie d'approfondir davantage mes compétences lors des prochaines années du BUT.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section">
+      <div class="section-inner">
+        <div class="s-eyebrow" data-fr="// restons en contact" data-en="// let's stay in touch">// restons en contact</div>
+        <h2 class="s-title" data-fr="Me <em>contacter</em>" data-en="Get in <em>touch</em>">Me <em>contacter</em></h2>
+        <div class="contact-grid">
+          <a class="c-card" href="mailto:thelio.dervieux@etu.univ-poitiers.fr">
+            <div class="c-icon">✉️</div>
+            <div class="c-label" data-fr="Adresse universitaire" data-en="University email">Adresse universitaire</div>
+            <div class="c-value">thelio.dervieux@etu.univ-poitiers.fr</div>
+          </a>
+          <a class="c-card" href="https://linkedin.com/in/VOTRE-ID-ICI" target="_blank" rel="noopener">
+            <div class="c-icon">💼</div>
+            <div class="c-label">LinkedIn</div>
+            <div class="c-value" data-fr="Voir le profil →" data-en="View profile →">Voir le profil →</div>
+          </a>
+        </div>
+        <div class="cv-row">
+          <div class="cv-info">
+            <h3 data-fr="Curriculum Vitæ" data-en="Resume / CV">Curriculum Vitæ</h3>
+            <p data-fr="Mon CV sera disponible prochainement." data-en="My resume will be available soon.">Mon CV sera disponible prochainement.</p>
+          </div>
+          <div class="cv-btn-na">
+            <span>📄</span>
+            <span data-fr="Indisponible pour le moment" data-en="Not available yet">Indisponible pour le moment</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span data-fr="© 2026 Thélio Dervieux — Portfolio" data-en="© 2026 Thélio Dervieux — Portfolio">© 2026 Thélio Dervieux — Portfolio</span>
+    </footer>
+  </div><!-- end #main-content -->
+
+  <!-- ============================================================
+       ALL PROJECTS PAGE
+  ============================================================ -->
+  <div id="all-projects-page">
+    <div class="all-proj-inner">
+      <div class="all-proj-header">
+        <div class="s-eyebrow" data-fr="// toutes mes réalisations" data-en="// all my work">// toutes mes réalisations</div>
+        <h2 class="s-title" data-fr="Tous mes <em>Projets</em>" data-en="All my <em>Projects</em>">Tous mes <em>Projets</em></h2>
+        <div class="filter-bar">
+          <div class="search-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" id="search-input"
+              placeholder="Rechercher un projet..."
+              data-fr="Rechercher un projet..."
+              data-en="Search a project..."
+              oninput="filterAllProjects()" autocomplete="off">
+          </div>
+          <div class="tag-filters" id="tag-filters"></div>
+        </div>
+        <div class="proj-count" id="proj-count"></div>
+      </div>
+      <div class="all-projects-grid" id="all-projects-grid">
+        <div class="no-results" id="no-results" data-fr="// Aucun projet ne correspond à votre recherche." data-en="// No projects match your search.">// Aucun projet ne correspond à votre recherche.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PROJECT DETAIL PAGE
+  ============================================================ -->
+  <div id="project-detail-page">
+    <div class="detail-hero" id="detail-hero"></div>
+    <div class="detail-body">
+      <div class="detail-main">
+        <div class="detail-date" id="detail-date"></div>
+        <h1 class="detail-title" id="detail-title"></h1>
+        <div class="detail-tags" id="detail-tags"></div>
+        <div class="detail-desc" id="detail-desc"></div>
+        <div class="detail-images" id="detail-images"></div>
+      </div>
+      <div class="detail-sidebar">
+        <div class="sidebar-box" id="sidebar-files-box">
+          <div class="sidebar-box-title">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            <span data-fr="Dossier du projet" data-en="Project files">Dossier du projet</span>
+          </div>
+          <div class="sidebar-box-sub" data-fr="Tous les fichiers disponibles" data-en="All available files">Tous les fichiers disponibles</div>
+          <div id="sidebar-files"></div>
+        </div>
+        <div class="sidebar-box">
+          <div class="sidebar-box-title" data-fr="Intéressé(e) par ce projet ?" data-en="Interested in this project?">Intéressé(e) par ce projet ?</div>
+          <p style="font-size:0.82rem;color:var(--text-2);margin-bottom:16px;" data-fr="N'hésitez pas à me contacter pour en discuter." data-en="Feel free to reach out to discuss it.">N'hésitez pas à me contacter pour en discuter.</p>
+          <a class="sidebar-contact-btn" href="mailto:thelio.dervieux@etu.univ-poitiers.fr">
+            <span>✉️</span>
+            <span data-fr="Me contacter" data-en="Contact me">Me contacter</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    /* ═══════════════════════════════════════════════════════════
+       PROJECTS DATA  —  à compléter au fur et à mesure
+       Structure de chaque projet :
+       {
+         id:          identifiant unique (slug)
+         featured:    true = affiché sur la page d'accueil (max 6)
+         titleFr / titleEn
+         shortDescFr / shortDescEn   (affiché sur la carte)
+         longDescFr  / longDescEn    (page détail — supporte **gras**, ## titre, ## sous-titre, listes - item)
+         date:        "YYYY-MM-DD"
+         tags:        ["Python", "SQL", ...]
+         thumb:       "assets/proj-X-thumb.jpg"   ou null
+         hero:        "assets/proj-X-hero.jpg"    ou null (image pleine largeur de la page détail)
+         images:      [ { src: "assets/proj-X-img1.jpg", captionFr: "...", captionEn: "..." } ]
+         files:       [ { nameFr, nameEn, path, type: "PDF"|"PY"|"PBI"|"XLSX"|"WORD"|"ZIP"|"LINK" } ]
+       }
+    ═══════════════════════════════════════════════════════════ */
+    const PROJECTS = [
+      /* ── Projets vedettes (featured: true) = 6 plus récents ── */
+      {
+        id: "projet-10",
+        featured: true,
+        titleFr: "Analyse de données, reporting et datavisualisation",
+        titleEn: "Data Analysis, Reporting and Datavisualisation",
+        shortDescFr: "Projet final de l'année regroupant différentes compétences en analyse de données, reporting et datavisualisation. Restitution à l'oral entièrement en anglais.",
+        shortDescEn: "Year-end capstone project combining data analysis, reporting and dataviz skills developed throughout the year. Full oral presentation in English.",
+        longDescFr: "## Contexte du projet\n\nDescription détaillée à venir.",
+        longDescEn: "## Project context\n\nDetailed description coming soon.",
+        date: "10/06/2026",
+        tags: ["Excel", "Trello", "Canva", "Python"],
+        thumb: "assets/Miniature10.png",
+        hero: "assets/Miniature10.png",
+        images: [],
+        files: []
+      },
+      {
+        id: "projet-6",
+        featured: true,
+        titleFr: "Estimation par échantillonnage",
+        titleEn: "Estimation by Sampling",
+        shortDescFr: "Estimation de la population totale de la France à l'aide d'un échantillonnage stratifié ou non.",
+        shortDescEn: "Estimating France's total population using stratified and non-stratified sampling methods.",
+        longDescFr: "## Contexte du projet\n\nDescription détaillée à venir.",
+        longDescEn: "## Project context\n\nDetailed description coming soon.",
+        date: "27/05/2026",
+        tags: ["R", "Word", "SAS 9.4", "Python"],
+        thumb: "assets/Miniature6.avif",
+        hero: "assets/Miniature6.avif",
+        images: [],
+        files: []
+      },
+      {
+        id: "projet-8",
+        featured: true,
+        titleFr: "Dataviz — Concours national",
+        titleEn: "Dataviz — National Competition",
+        shortDescFr: "Concours de datavisualisation national organisé en collaboration avec l'INSEE. Répondre à une problématique par une étude et des visuels clés.",
+        shortDescEn: "National data visualisation contest run by the Data Science department with INSEE. Answering a research question through a study and key visuals.",
+        longDescFr: "## Contexte du projet\n\nDescription détaillée à venir.",
+        longDescEn: "## Project context\n\nDetailed description coming soon.",
+        date: "21/05/2026",
+        tags: ["Power BI", "Canva", "Excel"],
+        thumb: "assets/Miniature8.png",
+        hero: "assets/Miniature8.png",
+        images: [],
+        files: []
+      },
+      {
+        id: "projet-9",
+        featured: true,
+        titleFr: "Construction et présentation d'indicateurs de performance",
+        titleEn: "Building and Presenting Performance Indicators",
+        shortDescFr: "Analyse économique du groupe Fleury-Michon dans un but décisionnel.",
+        shortDescEn: "Economic analysis of the Fleury-Michon group for business decision-making purposes.",
+        longDescFr: "## Contexte du projet\n\nDescription détaillée à venir.",
+        longDescEn: "## Project context\n\nDetailed description coming soon.",
+        date: "06/05/2026",
+        tags: ["Excel", "Word"],
+        thumb: "assets/Miniature9.png",
+        hero: "assets/Miniature9.png",
+        images: [],
+        files: []
+      },
+      {
+        id: "projet-5",
+        featured: true,
+        titleFr: "Conception et implémentation d'une base de données",
+        titleEn: "Database Design and Implementation",
+        shortDescFr: "Conception d'une base de données et alimentation dynamique à partir de fichiers Excel bruts.",
+        shortDescEn: "Database design and dynamic population from raw Excel files using Python and SQL.",
+        longDescFr: "## Contexte du projet\n\nDescription détaillée à venir.",
+        longDescEn: "## Project context\n\nDetailed description coming soon.",
+        date: "06/04/2026",
+        tags: ["Excel", "Looping", "Python", "SQL"],
+        thumb: "assets/Miniature5.png",
+        hero: "assets/Miniature5.png",
+        images: [],
+        files: []
+      },
+      {
+        id: "projet-7",
+        featured: true,
+        titleFr: "Régression sur des données réelles",
+        titleEn: "Regression on Real Data",
+        shortDescFr: "Estimation de la valeur foncière des biens immobiliers de Niort et des alentours à l'aide de régressions linéaires simples.",
+        shortDescEn: "Estimating real estate values in Niort using simple linear regression models applied to real market data.",
+        longDescFr: "## Contexte du projet\n\nDescription détaillée à venir.",
+        longDescEn: "## Project context\n\nDetailed description coming soon.",
+        date: "05/04/2026",
+        tags: ["R", "Word"],
+        thumb: "assets/Miniature7.avif",
+        hero: "assets/Miniature7.avif",
+        images: [],
+        files: []
+      },
+      /* ── Projets supplémentaires (visible via "Voir tous") ── */
+      {
+        id: "projet-3",
+        featured: false,
+        titleFr: "Préparation et synthèse d'un tableau de données",
+        titleEn: "Data Table Preparation and Synthesis",
+        shortDescFr: "Mise en valeur des résultats d'une enquête réalisée auprès de 373 étudiants de l'IUT de Niort sur leurs usages du téléphone portable.",
+        shortDescEn: "Highlighting results from a survey of 373 IUT Niort students on their smartphone usage habits.",
+        longDescFr: "## Contexte du projet\n\nDescription détaillée à venir.",
+        longDescEn: "## Project context\n\nDetailed description coming soon.",
+        date: "10/01/2026",
+        tags: ["Word", "Sphinx"],
+        thumb: "assets/Miniature3.png",
+        hero: "assets/Miniature3.png",
+        images: [],
+        files: []
+      },
+      {
+        id: "projet-1",
+        featured: false,
+        titleFr: "Création d'un reporting",
+        titleEn: "Creating a Reporting Tool",
+        shortDescFr: "Outil Excel dynamique de gestion des notes avec visualisation.",
+        shortDescEn: "Dynamic Excel tool for grade management with built-in data visualisation.",
+        longDescFr: "## Contexte du projet\n\nDescription détaillée à venir.",
+        longDescEn: "## Project context\n\nDetailed description coming soon.",
+        date: "21/12/2025",
+        tags: ["Excel", "VBA"],
+        thumb: "assets/Miniature1.png",
+        hero: "assets/Miniature1.png",
+        images: [],
+        files: []
+      },
+      {
+        id: "projet-2",
+        featured: false,
+        titleFr: "Écriture et lecture de fichiers de données",
+        titleEn: "Reading and Writing Data Files",
+        shortDescFr: "Nettoyer un fichier JSON de données brutes et stocker les données dans un fichier CSV.",
+        shortDescEn: "Clean a raw JSON data file and store the processed data in a structured CSV file.",
+        longDescFr: "## Contexte du projet\n\nDescription détaillée à venir.",
+        longDescEn: "## Project context\n\nDetailed description coming soon.",
+        date: "06/12/2025",
+        tags: ["Python", "CSV", "JSON"],
+        thumb: "assets/Miniature2.png",
+        hero: "assets/Miniature2.png",
+        images: [],
+        files: []
+      },
+      {
+        id: "projet-4",
+        featured: false,
+        titleFr: "Apprendre en situation la production de données en entreprise",
+        titleEn: "Learning Data Production in a Business Context",
+        shortDescFr: "Étude sur les communes françaises aux plus forts taux de natalité pour conseiller le réarmement démographique de la France, à partir des données de l'INSEE.",
+        shortDescEn: "Study on French municipalities with the highest birth rates to advise on France's demographic renewal, based on INSEE data.",
+        longDescFr: "## Contexte du projet\n\nDescription détaillée à venir.",
+        longDescEn: "## Project context\n\nDetailed description coming soon.",
+        date: "08/12/2025",
+        tags: ["Excel", "Word"],
+        thumb: "assets/Miniature4.png",
+        hero: "assets/Miniature4.png",
+        images: [],
+        files: []
+      },
+      {
+        id: "projet-11",
+        featured: false,
+        titleFr: "Présentation d'un territoire économique et culturel",
+        titleEn: "Presenting an Economic and Cultural Territory",
+        shortDescFr: "Présentation orale d'une ville française d'environ 60 000 habitants et de sa ville jumelée en anglais : économie, démographie et culture locale.",
+        shortDescEn: "Oral presentation of a French city of ~60,000 inhabitants and its twin city in English: economy, demographics and local culture.",
+        longDescFr: "## Contexte du projet\n\nDescription détaillée à venir.",
+        longDescEn: "## Project context\n\nDetailed description coming soon.",
+        date: "15/10/2025",
+        tags: ["Word"],
+        thumb: "assets/Miniature11.png",
+        hero: "assets/Miniature11.png",
+        images: [],
+        files: []
+      }
+    ];
+
+    /* ═══════════════════════════════════════════════════════════
+       STATE
+    ═══════════════════════════════════════════════════════════ */
+    let lang      = 'fr';
+    let theme     = 'dark';
+    let activeTag = null;
+    let currentView = 'home'; // 'home' | 'all-projects' | 'project-detail'
+
+    /* ═══════════════════════════════════════════════════════════
+       VIEW ROUTING
+    ═══════════════════════════════════════════════════════════ */
+    function showView(view, projectId) {
+      currentView = view;
+      const mainContent = document.getElementById('main-content');
+      const allProj     = document.getElementById('all-projects-page');
+      const detailPage  = document.getElementById('project-detail-page');
+      const navTabs     = document.getElementById('nav-tabs');
+      const navBack     = document.getElementById('nav-back');
+
+      mainContent.style.display = view === 'home'           ? 'block' : 'none';
+      allProj.style.display     = view === 'all-projects'   ? 'block' : 'none';
+      detailPage.style.display  = view === 'project-detail' ? 'block' : 'none';
+
+      navTabs.style.display = view === 'home' ? 'flex' : 'none';
+      navBack.style.display = view !== 'home' ? 'flex' : 'none';
+
+      if (view === 'all-projects')   { renderAllProjects(); }
+      if (view === 'project-detail') { renderDetail(projectId); }
+
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    function goHome()            { showView('home'); }
+    function showAllProjects()   { showView('all-projects'); }
+    function openProject(id)     { showView('project-detail', id); }
+
+    /* ═══════════════════════════════════════════════════════════
+       THEME
+    ═══════════════════════════════════════════════════════════ */
+    function toggleTheme() {
+      theme = theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+      updateThumb('theme-thumb', theme === 'dark' ? 'opt-dark' : 'opt-light', ['opt-dark','opt-light']);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       LANGUAGE
+    ═══════════════════════════════════════════════════════════ */
+    function toggleLang() {
+      lang = lang === 'fr' ? 'en' : 'fr';
+      document.documentElement.lang = lang;
+      applyLang();
+      updateThumb('lang-thumb', lang === 'fr' ? 'opt-fr' : 'opt-en', ['opt-fr','opt-en']);
+    }
+
+    function applyLang() {
+      document.querySelectorAll('[data-fr]').forEach(el => {
+        const val = el.getAttribute('data-' + lang);
+        if (val === null) return;
+        if (el.tagName === 'INPUT') el.placeholder = val;
+        else el.innerHTML = val;
+      });
+      renderHomeProjects();
+      if (currentView === 'all-projects') renderAllProjects();
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       TOGGLE THUMB
+    ═══════════════════════════════════════════════════════════ */
+    function updateThumb(thumbId, activeId, allIds) {
+      const thumb    = document.getElementById(thumbId);
+      const activeEl = document.getElementById(activeId);
+      allIds.forEach(id => document.getElementById(id).classList.toggle('active', id === activeId));
+      if (thumb && activeEl) {
+        thumb.style.left  = activeEl.offsetLeft + 'px';
+        thumb.style.width = activeEl.offsetWidth + 'px';
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       NAVIGATION (home scroll)
+    ═══════════════════════════════════════════════════════════ */
+    function navTo(sectionId) {
+      if (currentView !== 'home') goHome();
+      setTimeout(() => {
+        const el = document.getElementById(sectionId);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, currentView !== 'home' ? 50 : 0);
+    }
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          document.querySelectorAll('.nav-tab').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.section === e.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-35% 0px -35% 0px', threshold: 0 });
+    ['accueil','projets','apropos','bilan','contact'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+
+    /* ═══════════════════════════════════════════════════════════
+       PROJECT CARD HTML
+    ═══════════════════════════════════════════════════════════ */
+    function makeCard(p) {
+      const title = lang === 'fr' ? p.titleFr    : p.titleEn;
+      const desc  = lang === 'fr' ? p.shortDescFr : p.shortDescEn;
+      const thumbHtml = p.thumb
+        ? `<img src="${p.thumb}" alt="${title}" loading="lazy">`
+        : `<div class="p-thumb-placeholder">
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+             <span>${lang === 'fr' ? '// miniature à venir' : '// thumbnail coming soon'}</span>
+           </div>`;
+      const tagsHtml = p.tags.length
+        ? p.tags.map(t => `<span class="p-tag">${t}</span>`).join('')
+        : `<span class="p-tag" style="background:var(--bg);color:var(--text-3);border-color:var(--border);">—</span>`;
+      const dateStr = p.date && p.date !== '2025-01-01' ? p.date : (lang === 'fr' ? '// date à venir' : '// date pending');
+
+      const card = document.createElement('div');
+      card.className = 'p-card';
+      card.setAttribute('data-id', p.id);
+      card.innerHTML = `
+        <div class="p-thumb">${thumbHtml}</div>
+        <div class="p-body">
+          <div class="p-date">${dateStr}</div>
+          <div class="p-title">${title}</div>
+          <div class="p-desc">${desc}</div>
+          <div class="p-tags">${tagsHtml}</div>
+        </div>`;
+      card.addEventListener('click', () => openProject(p.id));
+      return card;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       HOME PROJECTS (6 featured)
+    ═══════════════════════════════════════════════════════════ */
+    function renderHomeProjects() {
+      const grid = document.getElementById('projects-home-grid');
+      grid.innerHTML = '';
+      PROJECTS.filter(p => p.featured).slice(0, 6).forEach(p => grid.appendChild(makeCard(p)));
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       ALL PROJECTS PAGE
+    ═══════════════════════════════════════════════════════════ */
+    function buildTagFilters() {
+      const allTags = [...new Set(PROJECTS.flatMap(p => p.tags))].sort();
+      const container = document.getElementById('tag-filters');
+      container.innerHTML = allTags.map(t =>
+        `<button class="f-tag" data-tag="${t}" onclick="setTag('${t}')">${t}</button>`
+      ).join('');
+    }
+
+    function setTag(tag) {
+      activeTag = activeTag === tag ? null : tag;
+      document.querySelectorAll('.f-tag').forEach(btn => btn.classList.toggle('on', btn.dataset.tag === activeTag));
+      filterAllProjects();
+    }
+
+    function filterAllProjects() { renderAllProjects(); }
+
+    function renderAllProjects() {
+      const grid     = document.getElementById('all-projects-grid');
+      const noRes    = document.getElementById('no-results');
+      const countEl  = document.getElementById('proj-count');
+      const query    = (document.getElementById('search-input')?.value || '').trim().toLowerCase();
+
+      Array.from(grid.children).forEach(c => { if (!c.classList.contains('no-results')) c.remove(); });
+
+      let visible = 0;
+      PROJECTS.forEach(p => {
+        const title   = lang === 'fr' ? p.titleFr    : p.titleEn;
+        const desc    = lang === 'fr' ? p.shortDescFr : p.shortDescEn;
+        const haystack = [title, desc, ...p.tags].join(' ').toLowerCase();
+        if (query && !haystack.includes(query)) return;
+        if (activeTag && !p.tags.includes(activeTag)) return;
+        visible++;
+        grid.insertBefore(makeCard(p), noRes);
+      });
+
+      noRes.style.display = visible === 0 ? 'block' : 'none';
+      countEl.textContent = lang === 'fr'
+        ? `${visible} projet${visible > 1 ? 's' : ''} trouvé${visible > 1 ? 's' : ''}`
+        : `${visible} project${visible > 1 ? 's' : ''} found`;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       PROJECT DETAIL
+    ═══════════════════════════════════════════════════════════ */
+    function renderDetail(id) {
+      const p = PROJECTS.find(x => x.id === id);
+      if (!p) return;
+
+      const title    = lang === 'fr' ? p.titleFr   : p.titleEn;
+      const longDesc = lang === 'fr' ? p.longDescFr : p.longDescEn;
+
+      // Hero
+      const heroEl = document.getElementById('detail-hero');
+      heroEl.innerHTML = p.hero
+        ? `<img src="${p.hero}" alt="${title}">`
+        : `<div class="detail-hero-placeholder"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></div>`;
+
+      // Date
+      document.getElementById('detail-date').innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+        ${p.date}`;
+
+      // Title & Tags
+      document.getElementById('detail-title').textContent = title;
+      document.getElementById('detail-tags').innerHTML = p.tags.map(t => `<span class="detail-tag">${t}</span>`).join('') || '';
+
+      // Description (simple markdown)
+      document.getElementById('detail-desc').innerHTML = renderMarkdown(longDesc);
+
+      // Extra images
+      const imagesEl = document.getElementById('detail-images');
+      imagesEl.innerHTML = (p.images || []).map(img => `
+        <div class="detail-img-item">
+          <img src="${img.src}" alt="${lang === 'fr' ? img.captionFr : img.captionEn}" loading="lazy">
+          <div class="detail-img-caption">${lang === 'fr' ? img.captionFr : img.captionEn}</div>
+        </div>`).join('');
+
+      // Files
+      const filesEl = document.getElementById('sidebar-files');
+      const boxEl   = document.getElementById('sidebar-files-box');
+      if (!p.files || p.files.length === 0) {
+        boxEl.style.display = 'none';
+      } else {
+        boxEl.style.display = 'block';
+        const badgeClass = { PDF:'badge-pdf', PY:'badge-py', PBI:'badge-pbi', XLSX:'badge-xlsx', WORD:'badge-word', ZIP:'badge-zip', LINK:'badge-link' };
+        const fileIcon   = { PDF:'📄', PY:'🐍', PBI:'📊', XLSX:'📋', WORD:'📝', ZIP:'📦', LINK:'🔗' };
+        filesEl.innerHTML = p.files.map(f => {
+          const name   = lang === 'fr' ? f.nameFr : f.nameEn;
+          const badge  = badgeClass[f.type] || 'badge-default';
+          const icon   = fileIcon[f.type]   || '📎';
+          const isLink = f.type === 'LINK';
+          return `<div class="file-item">
+            <div class="file-info">
+              <span class="file-icon">${icon}</span>
+              <span class="file-name">${name}</span>
+              <span class="file-badge ${badge}">${f.type}</span>
+            </div>
+            <a class="file-dl" href="${f.path}" ${isLink ? 'target="_blank" rel="noopener"' : 'download'} title="${isLink ? 'Ouvrir' : 'Télécharger'}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${isLink ? '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/>' : '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>'}</svg>
+            </a>
+          </div>`;
+        }).join('');
+      }
+
+      // Apply lang to newly created elements
+      document.querySelectorAll('#project-detail-page [data-fr]').forEach(el => {
+        const val = el.getAttribute('data-' + lang);
+        if (val !== null) el.innerHTML = val;
+      });
+    }
+
+    /* Simple markdown → HTML */
+    function renderMarkdown(md) {
+      if (!md) return '';
+      return md
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+        .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+        .replace(/^- (.+)$/gm, '<li>$1</li>')
+        .replace(/(<li>.*<\/li>\n?)+/g, m => `<ul>${m}</ul>`)
+        .split(/\n\n+/)
+        .map(block => block.startsWith('<') ? block : `<p>${block.replace(/\n/g, '<br>')}</p>`)
+        .join('\n');
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       HERO CANVAS
+    ═══════════════════════════════════════════════════════════ */
+    function initCanvas() {
+      const canvas = document.getElementById('hero-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let dots = [], W, H, raf;
+
+      function resize() {
+        W = canvas.width  = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+        spawnDots();
+      }
+      function spawnDots() {
+        dots = [];
+        const n = Math.min(70, Math.floor(W * H / 14000));
+        for (let i = 0; i < n; i++)
+          dots.push({ x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.6+0.5, vx:(Math.random()-.5)*.25, vy:(Math.random()-.
