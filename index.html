@@ -113,13 +113,21 @@
     }
 
     .nav-logo {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 1.15rem;
-      color: var(--accent);
-      letter-spacing: -0.02em;
-      white-space: nowrap;
+      display: flex;
+      align-items: center;
       flex-shrink: 0;
+    }
+
+    .nav-logo img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+      /* On light mode, the logo is black-on-black: invert it */
+      transition: filter var(--transition);
+    }
+
+    [data-theme="light"] .nav-logo img {
+      filter: invert(1) brightness(0.2);
     }
 
     .nav-tabs {
@@ -848,7 +856,9 @@
   <nav id="main-nav">
     <div class="nav-inner">
 
-      <div class="nav-logo">TD.</div>
+      <div class="nav-logo">
+        <img src="assets/logoPortfolio.png" alt="TD Logo" style="height:38px;width:auto;object-fit:contain;">
+      </div>
 
       <div class="nav-tabs" id="nav-tabs">
         <button class="nav-tab active" data-section="accueil" onclick="navTo('accueil')">
@@ -895,7 +905,8 @@
 
       <div class="hero-photo-wrap">
         <div class="photo-ring">
-          <img class="hero-photo" src="assets/PhotoProfil.JPG" alt="Thélio Dervieux">
+          <img class="hero-photo" src="assets/PhotoProfil.JPG" alt="Thélio Dervieux"
+               onerror="this.onerror=null;this.src='assets/photoprofil.jpg';">
         </div>
       </div>
 
@@ -910,14 +921,12 @@
         <div class="hero-loc">
           <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
           <span data-fr="Niort / Bordeaux, France" data-en="Niort / Bordeaux, France">Niort / Bordeaux, France</span>
+          <span style="color:var(--border);margin:0 4px;">·</span>
+          <span data-fr="18 ans" data-en="18 years old">18 ans</span>
         </div>
         <p class="hero-desc" data-fr="Étudiant de première année de BUT Science des Données à Niort, je suis passionné par les statistiques et la manipulation de données dans le but de fournir une analyse rigoureuse des chiffres." data-en="First-year student in a Bachelor of Technology in Data Science in Niort, I am passionate about statistics and data manipulation with the goal of providing rigorous numerical analysis.">
           Étudiant de première année de BUT Science des Données à Niort, je suis passionné par les statistiques et la manipulation de données dans le but de fournir une analyse rigoureuse des chiffres.
         </p>
-        <div class="hero-badge">
-          <span>⚡</span>
-          <span data-fr="18 ans" data-en="18 years old">18 ans</span>
-        </div>
       </div>
     </div>
   </section>
