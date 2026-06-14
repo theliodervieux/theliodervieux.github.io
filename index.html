@@ -1,36 +1,1411 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html lang="fr">
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
 <head>
-	<title>Stage officiel des pompiers de Morlais</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link href="style.css" rel="stylesheet" type="text/css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thélio Dervieux — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       DESIGN TOKENS
+    ============================================================ */
+    :root {
+      --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      --radius: 14px;
+    }
+
+    [data-theme="dark"] {
+      --bg:            #080D1A;
+      --bg-alt:        #0D1527;
+      --surface:       #131E33;
+      --surface-hover: #192742;
+      --border:        #1E2E4A;
+      --border-glow:   rgba(79,156,249,0.35);
+      --accent:        #4F9CF9;
+      --accent-dim:    rgba(79,156,249,0.12);
+      --accent2:       #5EEAD4;
+      --accent2-dim:   rgba(94,234,212,0.08);
+      --text-1:        #E2E8F0;
+      --text-2:        #8B9CC8;
+      --text-3:        #3D4F6A;
+      --shadow:        0 8px 32px rgba(0,0,0,0.5);
+      --nav-blur:      rgba(8,13,26,0.82);
+      --dot-color:     rgba(79,156,249,0.55);
+      --line-color:    rgba(79,156,249,0.06);
+    }
+
+    [data-theme="light"] {
+      --bg:            #EEF3FF;
+      --bg-alt:        #E3ECFF;
+      --surface:       #FFFFFF;
+      --surface-hover: #F5F8FF;
+      --border:        #C8D6F5;
+      --border-glow:   rgba(37,99,235,0.3);
+      --accent:        #1D6FE8;
+      --accent-dim:    rgba(29,111,232,0.09);
+      --accent2:       #0891B2;
+      --accent2-dim:   rgba(8,145,178,0.07);
+      --text-1:        #0F172A;
+      --text-2:        #3D5070;
+      --text-3:        #94A3B8;
+      --shadow:        0 8px 32px rgba(79,100,156,0.13);
+      --nav-blur:      rgba(238,243,255,0.85);
+      --dot-color:     rgba(29,111,232,0.35);
+      --line-color:    rgba(29,111,232,0.05);
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 72px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      line-height: 1.6;
+      transition: background var(--transition), color var(--transition);
+      overflow-x: hidden;
+    }
+
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    /* ============================================================
+       SCROLLBAR
+    ============================================================ */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    /* ============================================================
+       NAVIGATION
+    ============================================================ */
+    nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 200;
+      background: var(--nav-blur);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition), border-color var(--transition);
+    }
+
+    .nav-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 28px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 2px;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .nav-tab {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-2);
+      padding: 7px 14px;
+      border-radius: 9px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-tab:hover {
+      color: var(--text-1);
+      background: var(--accent-dim);
+    }
+
+    .nav-tab.active {
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       TOGGLE PILLS (dark/light & FR/EN)
+    ============================================================ */
+    .t-pill {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 3px;
+      gap: 1px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      user-select: none;
+    }
+
+    .t-pill:hover { border-color: var(--accent); }
+
+    .t-opt {
+      position: relative;
+      z-index: 1;
+      padding: 5px 12px;
+      border-radius: 50px;
+      font-size: 0.73rem;
+      font-weight: 700;
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: 0.04em;
+      color: var(--text-2);
+      transition: color 0.2s;
+      line-height: 1;
+    }
+
+    .t-opt.active { color: #fff; }
+    [data-theme="light"] .t-opt.active { color: #fff; }
+
+    .t-thumb {
+      position: absolute;
+      top: 3px;
+      bottom: 3px;
+      border-radius: 50px;
+      background: var(--accent);
+      transition: left 0.28s cubic-bezier(0.4,0,0.2,1), width 0.28s cubic-bezier(0.4,0,0.2,1);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       HERO / ACCUEIL
+    ============================================================ */
+    #accueil {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 100px 28px 80px;
+      display: flex;
+      align-items: center;
+      gap: 72px;
+    }
+
+    /* Photo */
+    .hero-photo-wrap {
+      flex-shrink: 0;
+      animation: fadeUp 0.7s 0.05s ease both;
+    }
+
+    .photo-ring {
+      position: relative;
+      width: 210px;
+      height: 210px;
+    }
+
+    .photo-ring::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent), var(--accent2), var(--accent));
+      animation: spin 8s linear infinite;
+      opacity: 0.6;
+    }
+
+    .photo-ring::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 50%;
+      background: var(--bg);
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .hero-photo {
+      position: relative;
+      z-index: 1;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center 15%;
+      border: 3px solid var(--bg);
+      box-shadow: var(--shadow);
+    }
+
+    /* Text */
+    .hero-text { flex: 1; }
+
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      animation: fadeUp 0.6s 0.12s ease both;
+    }
+
+    .hero-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1.0;
+      letter-spacing: -0.035em;
+      color: var(--text-1);
+      margin-bottom: 14px;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero-name em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .hero-role {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--text-2);
+      margin-bottom: 6px;
+      animation: fadeUp 0.6s 0.27s ease both;
+    }
+
+    .hero-loc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-3);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      animation: fadeUp 0.6s 0.32s ease both;
+    }
+
+    .hero-desc {
+      font-size: 0.97rem;
+      color: var(--text-2);
+      max-width: 500px;
+      line-height: 1.8;
+      margin-bottom: 32px;
+      animation: fadeUp 0.6s 0.38s ease both;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 7px 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      animation: fadeUp 0.6s 0.44s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================================
+       SECTION BASE
+    ============================================================ */
+    .section {
+      padding: 110px 28px;
+      transition: background var(--transition);
+    }
+
+    .section.alt { background: var(--bg-alt); }
+
+    .section-inner { max-width: 1140px; margin: 0 auto; }
+
+    .s-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent2);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .s-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: var(--text-1);
+      margin-bottom: 52px;
+      line-height: 1.1;
+    }
+
+    .s-title em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    /* ============================================================
+       PROJETS
+    ============================================================ */
+    .proj-filter {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 180px;
+      max-width: 300px;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 15px;
+      height: 15px;
+      color: var(--text-3);
+      pointer-events: none;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px 10px 38px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.83rem;
+      color: var(--text-1);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .search-wrap input::placeholder { color: var(--text-3); }
+
+    .search-wrap input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+
+    .tag-filters {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .f-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      padding: 6px 14px;
+      border-radius: 50px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .f-tag:hover, .f-tag.on {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 22px;
+    }
+
+    .p-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.22s ease, border-color 0.22s, box-shadow 0.22s;
+    }
+
+    .p-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+      box-shadow: 0 16px 48px rgba(79,156,249,0.13);
+    }
+
+    .p-card.hidden { display: none; }
+
+    .p-thumb {
+      width: 100%;
+      height: 185px;
+      background: var(--bg);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .p-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .p-thumb-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      color: var(--text-3);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+    }
+
+    .p-thumb-placeholder svg {
+      width: 28px;
+      height: 28px;
+      opacity: 0.3;
+    }
+
+    .p-body {
+      padding: 20px 22px 22px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 10px;
+    }
+
+    .p-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-3);
+    }
+
+    .p-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-1);
+      line-height: 1.25;
+    }
+
+    .p-desc {
+      font-size: 0.84rem;
+      color: var(--text-2);
+      line-height: 1.7;
+      flex: 1;
+    }
+
+    .p-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+
+    .p-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      padding: 3px 10px;
+      border-radius: 50px;
+      background: var(--accent-dim);
+      color: var(--accent);
+      border: 1px solid rgba(79,156,249,0.18);
+    }
+
+    .p-deliverable {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 4px;
+      padding: 9px 18px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 9px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.18s, transform 0.18s;
+      align-self: flex-start;
+    }
+
+    .p-deliverable:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    .p-deliverable-na {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-3);
+      margin-top: 4px;
+    }
+
+    .no-results {
+      display: none;
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-3);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+    }
+
+    /* ============================================================
+       À PROPOS
+    ============================================================ */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .about-desc {
+      font-size: 0.95rem;
+      color: var(--text-2);
+      line-height: 1.85;
+    }
+
+    .about-desc p + p { margin-top: 18px; }
+
+    .about-placeholder {
+      font-style: italic;
+      color: var(--text-3);
+      border: 1px dashed var(--border);
+      border-radius: 9px;
+      padding: 16px 18px;
+      font-size: 0.82rem;
+      margin-top: 18px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Timeline */
+    .timeline-head {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 26px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), var(--accent2));
+      border-radius: 2px;
+    }
+
+    .tl-item {
+      position: relative;
+      margin-bottom: 34px;
+    }
+
+    .tl-item:last-child { margin-bottom: 0; }
+
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -30px;
+      top: 7px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg-alt);
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+
+    .tl-year {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.69rem;
+      color: var(--accent2);
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .tl-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-1);
+      margin-bottom: 3px;
+    }
+
+    .tl-sub {
+      font-size: 0.81rem;
+      color: var(--text-2);
+    }
+
+    /* ============================================================
+       BILAN
+    ============================================================ */
+    .bilan-placeholder {
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 56px;
+      text-align: center;
+      color: var(--text-3);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      line-height: 2;
+    }
+
+    .bilan-text {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 48px;
+      font-size: 0.97rem;
+      color: var(--text-2);
+      line-height: 1.9;
+    }
+
+    /* ============================================================
+       CONTACT
+    ============================================================ */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .c-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      transition: all 0.22s;
+      text-decoration: none;
+    }
+
+    .c-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+
+    .c-icon { font-size: 1.75rem; margin-bottom: 2px; }
+
+    .c-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .c-value {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-1);
+      word-break: break-all;
+    }
+
+    .cv-row {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin-top: 6px;
+    }
+
+    .cv-info h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-1);
+      margin-bottom: 5px;
+    }
+
+    .cv-info p { font-size: 0.83rem; color: var(--text-2); }
+
+    .cv-btn-na {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-3);
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: not-allowed;
+      white-space: nowrap;
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 28px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-3);
+      transition: border-color var(--transition);
+    }
+
+    /* ============================================================
+       MOBILE
+    ============================================================ */
+    @media (max-width: 780px) {
+      .hero-inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 36px;
+        padding: 100px 20px 60px;
+      }
+      .hero-loc { justify-content: center; }
+      .hero-desc { max-width: 100%; }
+      .hero-badge { display: inline-flex; }
+      .nav-tabs { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .cv-row { flex-direction: column; align-items: flex-start; }
+      .section { padding: 72px 20px; }
+      .bilan-text { padding: 28px 22px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .photo-ring::before { animation: none; }
+      * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+    }
+  </style>
 </head>
 <body>
-	<div id="menu">
-		<h1>Sapeurs pompiers de Morlais</h1>
-		<ul>
-			<li><a href="./pages/centre.html">Le centre</a></li>
-			<li><a href="./pages/stats.html">Les stats </a></li>
-		</ul>
-	</div>
-	
-	<div id="centre">
-		<fieldset>
-		<legend>Comment appeler les pompiers ?</legend>
-		<h2>Composer le 18 ou le 112 (numéro d'urgence européen).</h2>
-		<h2>Composer uniquement ces numéros pour les urgences graves</h2>
-		<h2>Autres numéros d'urgence : 15 samu - 17 police</h2>
-		<h2>En cas de sinistre, indiquer :</h2>
-		<ul>
-			<li class="cligno">La nature du sinistre</li>
-			<li class="cligno">Le lieu</li>
-			<li class="cligno">Le nombre de victimes et leurs états</li>
-		</ul>
-		<center>
-		<!--photographie du centre du secours -->
-		???
-		</center>
-		</fieldset>
-	</div>
+
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <nav id="main-nav">
+    <div class="nav-inner">
+
+      <div class="nav-logo">TD.</div>
+
+      <div class="nav-tabs" id="nav-tabs">
+        <button class="nav-tab active" data-section="accueil" onclick="navTo('accueil')">
+          <span data-fr="Accueil" data-en="Home">Accueil</span>
+        </button>
+        <button class="nav-tab" data-section="projets" onclick="navTo('projets')">
+          <span data-fr="Projets" data-en="Projects">Projets</span>
+        </button>
+        <button class="nav-tab" data-section="apropos" onclick="navTo('apropos')">
+          <span data-fr="À propos" data-en="About">À propos</span>
+        </button>
+        <button class="nav-tab" data-section="bilan" onclick="navTo('bilan')">
+          <span data-fr="Bilan" data-en="Year Review">Bilan</span>
+        </button>
+        <button class="nav-tab" data-section="contact" onclick="navTo('contact')">
+          <span data-fr="Contact" data-en="Contact">Contact</span>
+        </button>
+      </div>
+
+      <div class="nav-controls">
+        <!-- Lang toggle -->
+        <div class="t-pill" onclick="toggleLang()" title="Changer de langue / Switch language">
+          <div class="t-thumb" id="lang-thumb"></div>
+          <span class="t-opt active" id="opt-fr">FR</span>
+          <span class="t-opt" id="opt-en">EN</span>
+        </div>
+        <!-- Theme toggle -->
+        <div class="t-pill" onclick="toggleTheme()" title="Changer de thème / Toggle theme">
+          <div class="t-thumb" id="theme-thumb"></div>
+          <span class="t-opt active" id="opt-dark">🌙</span>
+          <span class="t-opt" id="opt-light">☀️</span>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       ACCUEIL
+  ============================================================ -->
+  <section id="accueil">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-inner">
+
+      <div class="hero-photo-wrap">
+        <div class="photo-ring">
+          <img class="hero-photo" src="assets/PhotoProfil.JPG" alt="Thélio Dervieux">
+        </div>
+      </div>
+
+      <div class="hero-text">
+        <div class="hero-eyebrow" data-fr="// étudiant · science des données" data-en="// student · data science">
+          // étudiant · science des données
+        </div>
+        <h1 class="hero-name">Thélio<br><em>Dervieux</em></h1>
+        <div class="hero-role" data-fr="BUT Science des Données — 1ère année" data-en="Bachelor of Technology in Data Science — 1st year">
+          BUT Science des Données — 1ère année
+        </div>
+        <div class="hero-loc">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span data-fr="Niort / Bordeaux, France" data-en="Niort / Bordeaux, France">Niort / Bordeaux, France</span>
+        </div>
+        <p class="hero-desc" data-fr="Étudiant de première année de BUT Science des Données à Niort, je suis passionné par les statistiques et la manipulation de données dans le but de fournir une analyse rigoureuse des chiffres." data-en="First-year student in a Bachelor of Technology in Data Science in Niort, I am passionate about statistics and data manipulation with the goal of providing rigorous numerical analysis.">
+          Étudiant de première année de BUT Science des Données à Niort, je suis passionné par les statistiques et la manipulation de données dans le but de fournir une analyse rigoureuse des chiffres.
+        </p>
+        <div class="hero-badge">
+          <span>⚡</span>
+          <span data-fr="18 ans" data-en="18 years old">18 ans</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PROJETS
+  ============================================================ -->
+  <section id="projets" class="section alt">
+    <div class="section-inner">
+      <div class="s-eyebrow" data-fr="// mes réalisations" data-en="// my work">// mes réalisations</div>
+      <h2 class="s-title" data-fr="Mes <em>Projets</em>" data-en="My <em>Projects</em>">Mes <em>Projets</em></h2>
+
+      <div class="proj-filter">
+        <div class="search-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="search-input"
+            placeholder="Rechercher un projet..."
+            data-fr="Rechercher un projet..."
+            data-en="Search a project..."
+            oninput="filterProjects()" autocomplete="off">
+        </div>
+        <div class="tag-filters" id="tag-filters"></div>
+      </div>
+
+      <div class="projects-grid" id="projects-grid">
+        <div class="no-results" id="no-results" data-fr="// Aucun projet ne correspond à votre recherche." data-en="// No projects match your search.">
+          // Aucun projet ne correspond à votre recherche.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       À PROPOS
+  ============================================================ -->
+  <section id="apropos" class="section">
+    <div class="section-inner">
+      <div class="s-eyebrow" data-fr="// qui suis-je ?" data-en="// who am I?">// qui suis-je ?</div>
+      <h2 class="s-title" data-fr="À <em>propos</em> de moi" data-en="<em>About</em> me">À <em>propos</em> de moi</h2>
+
+      <div class="about-grid">
+
+        <!-- Description personnelle -->
+        <div>
+          <div class="about-desc">
+            <p data-fr="Passionné par les mathématiques et les sciences depuis toujours, j'ai naturellement orienté mon parcours vers l'analyse de données. Ce qui me fascine dans la data science, c'est cette capacité à transformer des chiffres bruts en insights pertinents — à faire parler les données là où d'autres ne voient que du bruit." data-en="Passionate about mathematics and sciences from a young age, I naturally oriented my path towards data analysis. What fascinates me in data science is this ability to transform raw numbers into relevant insights — to make data speak where others see only noise.">
+              Passionné par les mathématiques et les sciences depuis toujours, j'ai naturellement orienté mon parcours vers l'analyse de données. Ce qui me fascine dans la data science, c'est cette capacité à transformer des chiffres bruts en insights pertinents — à faire parler les données là où d'autres ne voient que du bruit.
+            </p>
+            <p data-fr="En dehors des études, le sport occupe une place centrale dans ma vie — aussi bien en le pratiquant qu'en suivant les compétitions avec passion. Cette discipline sportive nourrit ma rigueur et ma persévérance dans le travail." data-en="Outside of studies, sport occupies a central place in my life — both in practicing it and following competitions with passion. This athletic discipline fuels my rigor and perseverance at work.">
+              En dehors des études, le sport occupe une place centrale dans ma vie — aussi bien en le pratiquant qu'en suivant les compétitions avec passion. Cette discipline sportive nourrit ma rigueur et ma persévérance dans le travail.
+            </p>
+          </div>
+          <div class="about-placeholder" data-fr="// Description personnelle approfondie à venir..." data-en="// Detailed personal description coming soon...">
+            // Description personnelle approfondie à venir...
+          </div>
+        </div>
+
+        <!-- Parcours scolaire -->
+        <div>
+          <div class="timeline-head" data-fr="// parcours scolaire" data-en="// academic path">// parcours scolaire</div>
+          <div class="timeline">
+
+            <div class="tl-item">
+              <div class="tl-year" data-fr="2025 → Aujourd'hui" data-en="2025 → Present">2025 → Aujourd'hui</div>
+              <div class="tl-title" data-fr="BUT Sciences des Données — 1ère année" data-en="Bachelor of Technology in Data Science — 1st year">BUT Sciences des Données — 1ère année</div>
+              <div class="tl-sub" data-fr="Université de Poitiers · IUT de Niort" data-en="University of Poitiers · IUT of Niort">Université de Poitiers · IUT de Niort</div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-year">2024 — 2025</div>
+              <div class="tl-title" data-fr="Licence de Mathématiques (L1)" data-en="Bachelor's in Mathematics (1st year)">Licence de Mathématiques (L1)</div>
+              <div class="tl-sub" data-fr="Université de Bordeaux" data-en="University of Bordeaux">Université de Bordeaux</div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-year">2024</div>
+              <div class="tl-title" data-fr="Baccalauréat Général" data-en="French Baccalauréat">Baccalauréat Général</div>
+              <div class="tl-sub" data-fr="Spécialités : Mathématiques & HGGSP" data-en="Specialties: Mathematics & HGGSP (Geopolitics & Political Science)">Spécialités : Mathématiques & HGGSP</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       BILAN
+  ============================================================ -->
+  <section id="bilan" class="section alt">
+    <div class="section-inner">
+      <div class="s-eyebrow" data-fr="// rétrospective" data-en="// retrospective">// rétrospective</div>
+      <h2 class="s-title" data-fr="Bilan <em>personnel</em> de l'année" data-en="Personal <em>year</em> review">Bilan <em>personnel</em> de l'année</h2>
+      <div class="bilan-placeholder" data-fr="// Contenu à venir.&#10;Ce texte récapitulatif de l'année est en cours de rédaction." data-en="// Content coming soon.&#10;This year recap is currently being written.">
+        // Contenu à venir.<br>Ce texte récapitulatif de l'année est en cours de rédaction.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT
+  ============================================================ -->
+  <section id="contact" class="section">
+    <div class="section-inner">
+      <div class="s-eyebrow" data-fr="// restons en contact" data-en="// let's stay in touch">// restons en contact</div>
+      <h2 class="s-title" data-fr="Me <em>contacter</em>" data-en="Get in <em>touch</em>">Me <em>contacter</em></h2>
+
+      <div class="contact-grid">
+        <a class="c-card" href="mailto:thelio.dervieux@etu.univ-poitiers.fr">
+          <div class="c-icon">✉️</div>
+          <div class="c-label" data-fr="Adresse universitaire" data-en="University email">Adresse universitaire</div>
+          <div class="c-value">thelio.dervieux@etu.univ-poitiers.fr</div>
+        </a>
+
+        <a class="c-card" href="https://linkedin.com/in/VOTRE-ID-ICI" target="_blank" rel="noopener" id="linkedin-card">
+          <div class="c-icon">💼</div>
+          <div class="c-label">LinkedIn</div>
+          <div class="c-value" data-fr="Voir le profil →" data-en="View profile →">Voir le profil →</div>
+        </a>
+      </div>
+
+      <!-- CV -->
+      <div class="cv-row">
+        <div class="cv-info">
+          <h3 data-fr="Curriculum Vitæ" data-en="Resume / CV">Curriculum Vitæ</h3>
+          <p data-fr="Mon CV sera disponible prochainement." data-en="My resume will be available soon.">Mon CV sera disponible prochainement.</p>
+        </div>
+        <div class="cv-btn-na">
+          <span>📄</span>
+          <span data-fr="Indisponible pour le moment" data-en="Not available yet">Indisponible pour le moment</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer>
+    <span data-fr="© 2025 Thélio Dervieux — Conçu &amp; développé avec ♥" data-en="© 2025 Thélio Dervieux — Designed &amp; developed with ♥">
+      © 2025 Thélio Dervieux — Conçu &amp; développé avec ♥
+    </span>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    /* ──────────────────────────────────────────────────────────
+       PROJECT DATA  (à compléter au fur et à mesure)
+    ────────────────────────────────────────────────────────── */
+    const PROJECTS = [
+      {
+        id: 1,
+        titleFr: "Projet 1",
+        titleEn: "Project 1",
+        descFr: "Description du projet à renseigner.",
+        descEn: "Project description to be filled in.",
+        date: "2024 – 2025",
+        tags: [],
+        thumb: null,          // ex: "assets/proj1.png"
+        deliverable: null     // ex: "assets/proj1.pdf" ou "https://..."
+      },
+      {
+        id: 2,
+        titleFr: "Projet 2",
+        titleEn: "Project 2",
+        descFr: "Description du projet à renseigner.",
+        descEn: "Project description to be filled in.",
+        date: "2024 – 2025",
+        tags: [],
+        thumb: null,
+        deliverable: null
+      },
+      {
+        id: 3,
+        titleFr: "Projet 3",
+        titleEn: "Project 3",
+        descFr: "Description du projet à renseigner.",
+        descEn: "Project description to be filled in.",
+        date: "2024 – 2025",
+        tags: [],
+        thumb: null,
+        deliverable: null
+      },
+      {
+        id: 4,
+        titleFr: "Projet 4",
+        titleEn: "Project 4",
+        descFr: "Description du projet à renseigner.",
+        descEn: "Project description to be filled in.",
+        date: "2024 – 2025",
+        tags: [],
+        thumb: null,
+        deliverable: null
+      },
+      {
+        id: 5,
+        titleFr: "Projet 5",
+        titleEn: "Project 5",
+        descFr: "Description du projet à renseigner.",
+        descEn: "Project description to be filled in.",
+        date: "2024 – 2025",
+        tags: [],
+        thumb: null,
+        deliverable: null
+      },
+      {
+        id: 6,
+        titleFr: "Projet 6",
+        titleEn: "Project 6",
+        descFr: "Description du projet à renseigner.",
+        descEn: "Project description to be filled in.",
+        date: "2024 – 2025",
+        tags: [],
+        thumb: null,
+        deliverable: null
+      }
+    ];
+
+    /* ──────────────────────────────────────────────────────────
+       STATE
+    ────────────────────────────────────────────────────────── */
+    let lang  = 'fr';
+    let theme = 'dark';
+    let activeTag = null;
+
+    /* ──────────────────────────────────────────────────────────
+       THEME
+    ────────────────────────────────────────────────────────── */
+    function toggleTheme() {
+      theme = theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+      updateThumb('theme-thumb', theme === 'dark' ? 'opt-dark' : 'opt-light', ['opt-dark','opt-light']);
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       LANGUAGE
+    ────────────────────────────────────────────────────────── */
+    function toggleLang() {
+      lang = lang === 'fr' ? 'en' : 'fr';
+      document.documentElement.lang = lang;
+      applyLang();
+      updateThumb('lang-thumb', lang === 'fr' ? 'opt-fr' : 'opt-en', ['opt-fr','opt-en']);
+    }
+
+    function applyLang() {
+      // Update all elements with data-fr / data-en
+      document.querySelectorAll('[data-fr]').forEach(el => {
+        const val = el.getAttribute('data-' + lang);
+        if (val === null) return;
+        if (el.tagName === 'INPUT') {
+          el.placeholder = val;
+        } else {
+          el.innerHTML = val;
+        }
+      });
+      // Re-render projects (title / desc change with lang)
+      renderProjects();
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       TOGGLE THUMB POSITIONING
+    ────────────────────────────────────────────────────────── */
+    function updateThumb(thumbId, activeId, allIds) {
+      const thumb = document.getElementById(thumbId);
+      const activeEl = document.getElementById(activeId);
+      allIds.forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.toggle('active', id === activeId);
+      });
+      if (thumb && activeEl) {
+        thumb.style.left  = activeEl.offsetLeft + 'px';
+        thumb.style.width = activeEl.offsetWidth + 'px';
+      }
+    }
+
+    function initToggles() {
+      updateThumb('lang-thumb',  'opt-fr',   ['opt-fr',   'opt-en']);
+      updateThumb('theme-thumb', 'opt-dark', ['opt-dark', 'opt-light']);
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       NAVIGATION
+    ────────────────────────────────────────────────────────── */
+    function navTo(sectionId) {
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Highlight active tab on scroll
+    const NAV_SECTIONS = ['accueil','projets','apropos','bilan','contact'];
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          document.querySelectorAll('.nav-tab').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.section === id);
+          });
+        }
+      });
+    }, { rootMargin: '-35% 0px -35% 0px', threshold: 0 });
+
+    NAV_SECTIONS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+
+    /* ──────────────────────────────────────────────────────────
+       PROJECTS — RENDER
+    ────────────────────────────────────────────────────────── */
+    function renderProjects() {
+      const grid = document.getElementById('projects-grid');
+      const noResults = document.getElementById('no-results');
+      const query = (document.getElementById('search-input')?.value || '').trim().toLowerCase();
+
+      // Clear (keep no-results div)
+      Array.from(grid.children).forEach(c => {
+        if (!c.classList.contains('no-results')) c.remove();
+      });
+
+      let visible = 0;
+
+      PROJECTS.forEach(p => {
+        const title = lang === 'fr' ? p.titleFr : p.titleEn;
+        const desc  = lang === 'fr' ? p.descFr  : p.descEn;
+        const haystack = [title, desc, ...p.tags].join(' ').toLowerCase();
+
+        const matchSearch = !query      || haystack.includes(query);
+        const matchTag    = !activeTag  || p.tags.includes(activeTag);
+        if (!matchSearch || !matchTag) return;
+
+        visible++;
+        const card = document.createElement('div');
+        card.className = 'p-card';
+
+        // Thumbnail
+        const thumbHtml = p.thumb
+          ? `<img src="${p.thumb}" alt="${title}" loading="lazy">`
+          : `<div class="p-thumb-placeholder">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+               <span>${lang === 'fr' ? '// miniature à venir' : '// thumbnail coming soon'}</span>
+             </div>`;
+
+        // Tags
+        const tagsHtml = p.tags.length
+          ? p.tags.map(t => `<span class="p-tag">${t}</span>`).join('')
+          : `<span class="p-tag" style="background:var(--bg);color:var(--text-3);border-color:var(--border);">—</span>`;
+
+        // Deliverable
+        const deliverableHtml = p.deliverable
+          ? `<a class="p-deliverable" href="${p.deliverable}" target="_blank" rel="noopener">
+               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+               ${lang === 'fr' ? 'Voir le livrable' : 'View deliverable'}
+             </a>`
+          : `<div class="p-deliverable-na">${lang === 'fr' ? '// livrable à venir' : '// deliverable coming soon'}</div>`;
+
+        card.innerHTML = `
+          <div class="p-thumb">${thumbHtml}</div>
+          <div class="p-body">
+            <div class="p-date">${p.date}</div>
+            <div class="p-title">${title}</div>
+            <div class="p-desc">${desc}</div>
+            <div class="p-tags">${tagsHtml}</div>
+            ${deliverableHtml}
+          </div>`;
+
+        grid.insertBefore(card, noResults);
+      });
+
+      noResults.style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       PROJECTS — FILTER TAGS
+    ────────────────────────────────────────────────────────── */
+    function buildTagFilters() {
+      const allTags = [...new Set(PROJECTS.flatMap(p => p.tags))].sort();
+      const container = document.getElementById('tag-filters');
+      container.innerHTML = allTags.map(t =>
+        `<button class="f-tag" data-tag="${t}" onclick="setTag('${t}')">${t}</button>`
+      ).join('');
+    }
+
+    function setTag(tag) {
+      activeTag = activeTag === tag ? null : tag;
+      document.querySelectorAll('.f-tag').forEach(btn => {
+        btn.classList.toggle('on', btn.dataset.tag === activeTag);
+      });
+      renderProjects();
+    }
+
+    function filterProjects() { renderProjects(); }
+
+    /* ──────────────────────────────────────────────────────────
+       HERO CANVAS — constellation / scatter plot
+    ────────────────────────────────────────────────────────── */
+    function initCanvas() {
+      const canvas = document.getElementById('hero-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let dots = [], W, H, raf;
+
+      function resize() {
+        W = canvas.width  = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+        spawnDots();
+      }
+
+      function spawnDots() {
+        dots = [];
+        const n = Math.min(70, Math.floor(W * H / 14000));
+        for (let i = 0; i < n; i++) {
+          dots.push({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: Math.random() * 1.6 + 0.5,
+            vx: (Math.random() - 0.5) * 0.25,
+            vy: (Math.random() - 0.5) * 0.25
+          });
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        const dc = getComputedStyle(document.documentElement)
+                     .getPropertyValue('--dot-color').trim();
+        const lc = getComputedStyle(document.documentElement)
+                     .getPropertyValue('--line-color').trim();
+
+        // Connections
+        for (let i = 0; i < dots.length; i++) {
+          for (let j = i + 1; j < dots.length; j++) {
+            const dx = dots[i].x - dots[j].x;
+            const dy = dots[i].y - dots[j].y;
+            if (dx*dx + dy*dy < 14400) { // dist < 120
+              ctx.beginPath();
+              ctx.strokeStyle = lc;
+              ctx.lineWidth = 0.6;
+              ctx.moveTo(dots[i].x, dots[i].y);
+              ctx.lineTo(dots[j].x, dots[j].y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        // Dots
+        dots.forEach(d => {
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+          ctx.fillStyle = dc;
+          ctx.fill();
+          d.x += d.vx;
+          d.y += d.vy;
+          if (d.x < 0 || d.x > W) d.vx *= -1;
+          if (d.y < 0 || d.y > H) d.vy *= -1;
+        });
+
+        raf = requestAnimationFrame(draw);
+      }
+
+      resize();
+      draw();
+
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(resize, 150);
+      });
+
+      // Pause when hidden to save resources
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) cancelAnimationFrame(raf);
+        else draw();
+      });
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       INIT
+    ────────────────────────────────────────────────────────── */
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(initToggles, 60); // after layout
+      buildTagFilters();
+      renderProjects();
+      initCanvas();
+    });
+  </script>
 </body>
 </html>
